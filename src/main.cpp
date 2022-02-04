@@ -38,7 +38,6 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 void setViewAndProjectionMatrixForAllShaders(vector<Shader*> &shaders);
 
 void initPodiumMatrices(vector<glm::mat4> &standModel, vector<glm::vec3> &standPosition);
-//glm::mat4 drawStand(unsigned int VAO, glm::mat4 &model, Shader shader, int indices_count);
 
 //void renderScene(const Shader &shader);
 //void renderCube();
@@ -289,15 +288,6 @@ void setViewAndProjectionMatrixForAllShaders(vector<Shader*> &shaders){
     }
 }
 
-glm::mat4 drawStand(unsigned int VAO, glm::mat4 &model, Shader shader, int indices_count){
-
-    shader.use();
-    shader.setMat4("model", model);
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, indices_count);
-
-    return model;
-}
 
 void initPodiumMatrices(vector<glm::mat4> &standModel, vector<glm::vec3> &standPosition){
     //provera za koordinate :))
