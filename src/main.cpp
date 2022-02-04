@@ -233,13 +233,13 @@ void processInput(GLFWwindow *window) {
         camera.ProcessKeyboard(RIGHT, deltaTime);
 
     if(glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
-        camera.ProcessMouseMovement(0.0, 20.0);
+        camera.ProcessMouseMovement(0.0, 10.0);
     if(glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
-        camera.ProcessMouseMovement(0.0, -20.0);
+        camera.ProcessMouseMovement(0.0, -10.0);
     if(glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-        camera.ProcessMouseMovement(20.0, 0.0);
+        camera.ProcessMouseMovement(10.0, 0.0);
     if(glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
-        camera.ProcessMouseMovement(-20.0, 0.0);
+        camera.ProcessMouseMovement(-10.0, 0.0);
 
 }
 
