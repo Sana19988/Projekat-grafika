@@ -236,9 +236,9 @@ void processInput(GLFWwindow *window) {
         camera.ProcessMouseMovement(0.0, 30.0);
     if(glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
         camera.ProcessMouseMovement(0.0, -30.0);
-    if(glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
-        camera.ProcessMouseMovement(30.0, 0.0);
     if(glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+        camera.ProcessMouseMovement(30.0, 0.0);
+    if(glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
         camera.ProcessMouseMovement(-30.0, 0.0);
 
 }
