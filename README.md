@@ -6,5 +6,7 @@ Link ka snimku projekta:
 
 
 Pomeranje pozicije kamere: I, J, K, L
+
 Zumiranje: Mouse scroll
+
 Pomeranje u odnosu na modele: W, A, S, D
