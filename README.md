@@ -2,7 +2,7 @@ Projekat iz predmeta: Računarska grafika 3. godina osnovnih studija, smer Infor
 
 Autor: Aleksandra Tešić 316/2017
 
-Cilj projekta je upoznavanje sa bibliotekom OpenGL i rad sa istom kroz projekat. Za rad sa modelima korišćen je Blender alat.
+Cilj projekta je upoznavanje sa bibliotekom OpenGL i rad sa istom kroz projekat. Za rad sa modelima korišćen je parcijalno Blender alat. Modeli implementirani u include direktorijumu u model_manager.h .
 
 Link ka snimku i screenshot-ovima projekta: https://drive.google.com/drive/folders/1TcfIArPT9nS_qoOMa6AbtSbBXr00LV5q?usp=sharing
 
