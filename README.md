@@ -1,11 +1,10 @@
-# project_base
-Prazan projekat sa pratećim bibliotekama koje koristimo na času. 
+Projekat iz predmeta: Računarska grafika 3. godina osnovnih studija, smer Informatika, Matematički fakultet u Beogradu.
+Autor: Aleksandra Tešić 316/2017
 
-# Uputstvo
-1. `git clone https://github.com/matf-racunarska-grafika/project_base.git`
-2. CLion -> Open -> path/to/my/project_base
-3. Main se nalazi u src/main.cpp
-4. Cpp fajlovi idu u src folder
-5. Zaglavlja (h i hpp) fajlovi idu u include
-6. Šejderi idu u folder shaders. `Vertex shader` ima ekstenziju `.vs`, `fragment shader` ima ekstenziju `.fs`
-7. ALT+SHIFT+F10 -> project_base -> run
+Cilj projekta je upoznavanje sa bibliotekom OpenGL i rad sa istom kroz projekat. Za rad sa modelima korišćen je Blender alat.
+Link ka snimku projekta: 
+
+
+Pomeranje pozicije kamere: I, J, K, L
+Zumiranje: Mouse scroll
+Pomeranje u odnosu na modele: W, A, S, D
