@@ -135,13 +135,82 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+
+    float planeVertices[] = {
+            // positions          // texture Coords
+            5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
+            -5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
+            -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
+
+            5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
+            -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
+            5.0f, -0.5f, -5.0f,  2.0f, 2.0f
+    };
+
+    float transparentVertices[] = {
+            // positions                        // texture Coords (swapped y coordinates because texture is flipped upside down)
+            0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+            0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+            1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+            0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+            1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+            1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+    };
+
+
+
+    // plane VAO
+    unsigned int planeVAO, planeVBO;
+    glGenVertexArrays(1, &planeVAO);
+    glGenBuffers(1, &planeVBO);
+    glBindVertexArray(planeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    // transparent VAO
+    unsigned int transparentVAO, transparentVBO;
+    glGenVertexArrays(1, &transparentVAO);
+    glGenBuffers(1, &transparentVBO);
+    glBindVertexArray(transparentVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glBindVertexArray(0);
+
+    Shader blendShader("resources/shaders/blending.vs", "resources/shaders/blending.fs");
+
+    unsigned int transparentTexture = TextureFromFile("grass.png", "resources/textures");
+
+    vector<glm::vec3> vegetation
+            {
+                    glm::vec3(-20.3f, -0.75f, 0.25f),
+                    glm::vec3( 1.2f, -0.75f, 0.25f),
+                    glm::vec3( -0.5f, -0.75f, 2.0f),
+                    glm::vec3(-1.6f, -0.75f, 1.4f),
+                    glm::vec3 (0.6f, -0.75f, 1.4f)
+            };
+
+    blendShader.use();
+    blendShader.setInt("texture1", 0);
+
+
     Shader sShader("resources/shaders/shader.vs", "resources/shaders/shader.fs");
     Shader selectedStandShader("resources/shaders/selected_shader.vs", "resources/shaders/selected_stand.fs");
 
+    unsigned int diffuseMap = loadTexture(FileSystem::getPath("resources/textures/rocks/Rock_Mosaic_DIFF.png").c_str());
+    unsigned int specularMap = loadTexture(FileSystem::getPath("resources/textures/rocks/Rock_Mosaic_SPEC.png").c_str());
+
     sShader.use();
-    sShader.setInt("textur1", 0);
-    selectedStandShader.use();
-    selectedStandShader.setInt("texture", 1);
+    sShader.setInt("diffues", 0);
+    sShader.setInt("specular", 1);
 
     //CUBEMAP !!
 
@@ -172,7 +241,7 @@ int main() {
     ModelManager modelm = ModelManager(modelShader);
 
 
-    vector<Shader*> shaders = {&modelShader, &cubemapShader, &selectedStandShader, &sShader};
+    vector<Shader*> shaders = {&modelShader, &cubemapShader, &selectedStandShader, &sShader, &blendShader};
 
     // render loop
     while (!glfwWindowShouldClose(window)) {
@@ -195,17 +264,42 @@ int main() {
         //za sve sejdere
         setViewAndProjectionMatrixForAllShaders(shaders);
 
+        //blendShader.use();
+        //glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT,0.1f, 100.0f);
+//        glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 model = glm::mat4(1.0f);
+//        blendShader.setMat4("projection", projection);
+//        blendShader.setMat4("view", view);
+
+        // vegetation
+        glBindVertexArray(transparentVAO);
+        glBindTexture(GL_TEXTURE_2D, transparentTexture);
+        for (unsigned int i = 0; i < vegetation.size(); i++)
+        {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, vegetation[i]);
+            blendShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+
+
         //crtamo model
         setModelShaderUniforms(modelShader);
         modelm.drawCharacters(deltaTime * 150);
 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, diffuseMap);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specularMap);
 
         setStandShaderUniforms(sShader);
 
         /* Draw stands */
-        for(unsigned i = 0; i <= standModels.size(); i++) {
+        for(unsigned i = 0; i < standModels.size() && i < vegetation.size(); i++) {
             if (i == selectedStand)
-                drawStand(VAO, standModels[i], selectedStandShader, indices_count);
+                drawStand(VAO, standModels[i], selectedStandShader, indices_count );
+            else
+                drawStand(VAO, standModels[i], sShader, indices_count);
         }
 
         //cubemap
@@ -303,10 +397,10 @@ void setViewAndProjectionMatrixForAllShaders(vector<Shader*> &shaders){
     }
 }
 
-glm::mat4 drawStand(unsigned int VAO, glm::mat4 &model, Shader blendShader, int indices_count){
+glm::mat4 drawStand(unsigned int VAO, glm::mat4 &model, Shader shader, int indices_count){
 
-    blendShader.use();
-    blendShader.setMat4("model", model);
+    shader.use();
+    shader.setMat4("model", model);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, indices_count);
 
